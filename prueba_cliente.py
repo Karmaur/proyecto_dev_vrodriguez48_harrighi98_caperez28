@@ -3,7 +3,7 @@ cliente1 = ClienteRemitente(
     "Kevin",
     "Rodriguez",
     "Colombia",
-    "kevin@email.com",
+    "kevinrodriguez@gmail.com",
     "123456789",
     "3232376126",
     "Bogotá",
