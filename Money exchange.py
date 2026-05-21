@@ -1,13 +1,42 @@
 # The objective of the following code is to determine the amount on COP
 # needed to exchange for a given amount in a different currency for remitance.
+from cliente_remitente import ClienteRemitente
+from cliente_destino import ClienteDestino
+import requests
+import xml.etree.ElementTree as ET
+
+cliente1 = ClienteRemitente(
+    "Kevin",
+    "Rodriguez",
+    "Colombia",
+    "kevinrodriguez@gmail.com",
+    "123456789",
+    "3232376126",
+    "Bogotá",
+    "Estudiante",
+    "Salario"
+)
+
+print("=== CLIENTE REMITENTE ===")
+print(cliente1.mostrar_info())
+
+destinatario1 = ClienteDestino(
+    "Jhon",
+    "Smith",
+    "Estados Unidos",
+    "800 555 0125",
+    "jolin.doe@email.com",
+)
+
+print("=== CLIENTE DESTINO ===")
+print(destinatario1.mostrar_info())
 
 # Importar monedas ISO
-import xml.etree.ElementTree as ET
-tree = ET.parse("Money_Exchange/ISO4217.xml")
+
+tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 
 # Importar tasas de cambio
-import requests
 url = "https://api.exchangerate-api.com/v4/latest/COP"
 datos = requests.get(url).json()
 
@@ -72,7 +101,7 @@ while True:
             break
         else:
             print("No podemos enviar ", moneda_destino, "a ", pais_destino)
-        
+
 # Tasa del día
 tasa_cambio = datos["rates"][moneda_destino]
 
@@ -84,10 +113,11 @@ while True:
     try:
         cantidad_destino = input("¿Cuánto deseas enviar?")
         cantidad_destino = float(cantidad_destino.replace(",", "."))
-        if cantidad_destino > 0:
-            break
+        if cantidad_destino < 20000:
+            print("El monto minimo es de 20000 COP.")
+
         else:
-            print("La cantidad a enviar debe ser un número positivo.")
+            break
     except ValueError:
         print("Entrada no válida. Por favor ingrese solo números enteros" +
               " o decimales. Ej: 150.98 ó 150,98")
