@@ -3,7 +3,7 @@
 
 # Importar monedas ISO
 import xml.etree.ElementTree as ET
-tree = ET.parse("Money_Exchange/ISO4217.xml")
+tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 
 # Importar tasas de cambio
