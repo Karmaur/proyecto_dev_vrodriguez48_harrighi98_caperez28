@@ -32,11 +32,7 @@ print("=== CLIENTE DESTINO ===")
 print(destinatario1.mostrar_info())
 
 # Importar monedas ISO
-<<<<<<< HEAD
-import xml.etree.ElementTree as ET
-=======
 
->>>>>>> dev_caperez28
 tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 

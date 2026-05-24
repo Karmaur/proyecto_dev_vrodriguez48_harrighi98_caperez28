@@ -11,8 +11,4 @@ class ClienteRemitente:
         self.origen_fondos = origen_fondos
 
     def mostrar_info(self):
-<<<<<<< HEAD
-           return f"{self.nombre} {self.apellido} - {self.correo} - Tel: {self.telefono}"
-=======
         return f"{self.nombre} {self.apellido} - {self.correo} - Tel: {self.telefono}"
->>>>>>> dev_caperez28
