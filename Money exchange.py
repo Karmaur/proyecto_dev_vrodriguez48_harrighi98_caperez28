@@ -135,17 +135,22 @@ while True:
 cantidad_remitente = round(cantidad_destino * tasa_cambio, 2)
 print(cantidad_destino, "COP equivalen a", cantidad_remitente,
       moneda_destino, " antes de comisión e impuestos")
-
 # Cuatro por mil
 gravamen_mf = round(cantidad_remitente * 0.004, 2)
+print("El 4x1000 es de:", gravamen_mf, "COP")
 
 # Comisión
 comision = round(cantidad_remitente * 0.05, 2)
+print("La comisión es de:", comision, "COP")
 
 # IVA
 impuesto = round(comision * 0.19, 2)
+print("El IVA sobre la comisión es de:", impuesto, "COP")
 
 # Total a pagar
 total_remitente = round((cantidad_remitente + gravamen_mf + comision +
                         impuesto)/tasa_cambio, 2)
+
+# Entrega de resultados
 print("El total a pagar es de:", total_remitente, "COP")
+
