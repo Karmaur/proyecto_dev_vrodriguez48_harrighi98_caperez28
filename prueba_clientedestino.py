@@ -1,5 +1,5 @@
-from cliente_destino import ClienteDestino 
-destinatario1= ClienteDestino(
+from cliente_destino import ClienteDestino
+destinatario1 = ClienteDestino(
     "Jhon",
     "Smith",
     "Estados Unidos",
