@@ -5,48 +5,6 @@ from cliente_destino import ClienteDestino
 import requests
 import xml.etree.ElementTree as ET
 
-# Ingresar cliente remitente
-print("=== INGRESAR DATOS CLIENTE REMITENTE ===")
-
-nombre = input("Nombre: ")
-apellido = input("Apellido: ")
-pais = input("País: ")
-correo = input("Correo: ")
-documento = input("Documento: ")
-telefono = input("Teléfono: ")
-ciudad = input("Ciudad: ")
-ocupacion = input("Ocupación: ")
-ingreso = input("Tipo de ingreso: ")
-
-cliente1 = ClienteRemitente(
-    nombre,
-    apellido,
-    pais,
-    correo,
-    documento,
-    telefono,
-    ciudad,
-    ocupacion,
-    ingreso
-)
-
-# Ingresar cliente destino
-print("\n=== INGRESAR DATOS CLIENTE DESTINO ===")
-
-nombre_dest = input("Nombre: ")
-apellido_dest = input("Apellido: ")
-pais_dest = input("País: ")
-telefono_dest = input("Teléfono: ")
-correo_dest = input("Correo: ")
-
-destinatario1 = ClienteDestino(
-    nombre_dest,
-    apellido_dest,
-    pais_dest,
-    telefono_dest,
-    correo_dest
-)
-
 # Importar monedas ISO
 tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
@@ -83,31 +41,67 @@ for elem in root.findall(".//CcyNtry"):
     if pais not in paises_monedas:
         paises_monedas[pais] = moneda
 
+# Ingresar cliente remitente
+print("=== INGRESAR DATOS CLIENTE REMITENTE ===")
+
+nombre = input("Nombre: ")
+apellido = input("Apellido: ")
+pais = input("País: ")
+correo = input("Correo: ")
+documento = input("Documento: ")
+telefono = input("Teléfono: ")
+ciudad = input("Ciudad: ")
+ocupacion = input("Ocupación: ")
+ingreso = input("Tipo de ingreso: ")
+
+cliente1 = ClienteRemitente(
+    nombre,
+    apellido,
+    pais,
+    correo,
+    documento,
+    telefono,
+    ciudad,
+    ocupacion,
+    ingreso
+)
+
+# Ingresar cliente destino
+print("\n=== INGRESAR DATOS CLIENTE DESTINO ===")
+
+nombre_dest = input("Nombre: ")
+apellido_dest = input("Apellido: ")
+
+# Validación pais destino
+while True:
+    pais_dest = input("País: ").strip().upper()
+    if pais_dest in paises_monedas:
+        moneda_destino = paises_monedas[pais_dest]
+        break
+    print("País inválido. Intenta nuevamente.")
+
+telefono_dest = input("Teléfono: ")
+correo_dest = input("Correo: ")
+
+destinatario1 = ClienteDestino(
+    nombre_dest,
+    apellido_dest,
+    pais_dest,
+    telefono_dest,
+    correo_dest
+)
+
 # Monedas disponibles
 monedas = list(datos["rates"].keys())
 
-# Entrada país de destino
-while True:
-    try:
-        pais_destino = input(
-            "¿A qué país deseas enviar dinero?"
-            ).upper()
-        if pais_destino in paises_monedas:
-            moneda_destino = paises_monedas[pais_destino]
-            break
-        else:
-            print("País inválido, por favor asegurate de ingresar el nombre del país")
-    except ValueError:
-        print("Ingrese solo carácteres alfabeticos.")
-
-# Entrada país de destino
+# Opción moneda no disponible
 while True:
     if moneda_destino in monedas:
         break
     else:
         moneda_destino = input(
-            "Actualmente no manejamos esta moneda ¿Te gustaría enviar dolares o euros a "
-            + pais_destino + "? (USD o EUR): "
+            "Actualmente no manejamos esta moneda ¿Te gustaría enviar " +
+            "dolares o euros a " + pais_dest + "? (USD o EUR): "
             ).upper()
 
         if moneda_destino == "USD":
@@ -115,7 +109,7 @@ while True:
         elif moneda_destino == "EUR":
             break
         else:
-            print("No podemos enviar ", moneda_destino, "a ", pais_destino)
+            print("No podemos enviar ", moneda_destino, "a ", pais_dest)
 
 # Tasa del día
 tasa_cambio = datos["rates"][moneda_destino]
