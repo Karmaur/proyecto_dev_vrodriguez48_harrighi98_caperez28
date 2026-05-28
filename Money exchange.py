@@ -120,9 +120,9 @@ print("La tasa del día para", moneda_destino, "es de:",
 
 while True:
     try:
-        cantidad_destino = input("¿Cuánto deseas enviar?")
-        cantidad_destino = float(cantidad_destino.replace(",", "."))
-        if cantidad_destino < 20000:
+        cantidad_remitente = input("¿Cuánto deseas enviar?")
+        cantidad_remitente = float(cantidad_remitente.replace(",", "."))
+        if cantidad_remitente < 20000:
             print("El monto minimo es de 20000 COP.")
 
         else:
@@ -132,9 +132,10 @@ while True:
               " o decimales. Ej: 150.98 ó 150,98")
 
 # Cálculo subtotal en COP
-cantidad_remitente = round(cantidad_destino * tasa_cambio, 2)
-print(cantidad_destino, "COP equivalen a", cantidad_remitente,
+cantidad_destino = round(cantidad_remitente * tasa_cambio, 2)
+print(cantidad_remitente, "COP equivalen a", cantidad_destino,
       moneda_destino, " antes de comisión e impuestos")
+
 # Cuatro por mil
 gravamen_mf = round(cantidad_remitente * 0.004, 2)
 print("El 4x1000 es de:", gravamen_mf, "COP")
@@ -149,8 +150,7 @@ print("El IVA sobre la comisión es de:", impuesto, "COP")
 
 # Total a pagar
 total_remitente = round((cantidad_remitente + gravamen_mf + comision +
-                        impuesto)/tasa_cambio, 2)
+                        impuesto), 2)
 
 # Entrega de resultados
 print("El total a pagar es de:", total_remitente, "COP")
-
