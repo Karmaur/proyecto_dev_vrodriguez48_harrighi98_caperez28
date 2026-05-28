@@ -5,34 +5,7 @@ from cliente_destino import ClienteDestino
 import requests
 import xml.etree.ElementTree as ET
 
-cliente1 = ClienteRemitente(
-    "Kevin",
-    "Rodriguez",
-    "Colombia",
-    "kevinrodriguez@gmail.com",
-    "123456789",
-    "3232376126",
-    "Bogotá",
-    "Estudiante",
-    "Salario"
-)
-
-print("=== CLIENTE REMITENTE ===")
-print(cliente1.mostrar_info())
-
-destinatario1 = ClienteDestino(
-    "Jhon",
-    "Smith",
-    "Estados Unidos",
-    "800 555 0125",
-    "jolin.doe@email.com",
-)
-
-print("=== CLIENTE DESTINO ===")
-print(destinatario1.mostrar_info())
-
 # Importar monedas ISO
-
 tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 
@@ -68,31 +41,67 @@ for elem in root.findall(".//CcyNtry"):
     if pais not in paises_monedas:
         paises_monedas[pais] = moneda
 
+# Ingresar cliente remitente
+print("=== INGRESAR DATOS CLIENTE REMITENTE ===")
+
+nombre = input("Nombre: ")
+apellido = input("Apellido: ")
+pais = input("País: ")
+correo = input("Correo: ")
+documento = input("Documento: ")
+telefono = input("Teléfono: ")
+ciudad = input("Ciudad: ")
+ocupacion = input("Ocupación: ")
+ingreso = input("Tipo de ingreso: ")
+
+cliente1 = ClienteRemitente(
+    nombre,
+    apellido,
+    pais,
+    correo,
+    documento,
+    telefono,
+    ciudad,
+    ocupacion,
+    ingreso
+)
+
+# Ingresar cliente destino
+print("\n=== INGRESAR DATOS CLIENTE DESTINO ===")
+
+nombre_dest = input("Nombre: ")
+apellido_dest = input("Apellido: ")
+
+# Validación pais destino
+while True:
+    pais_dest = input("País: ").strip().upper()
+    if pais_dest in paises_monedas:
+        moneda_destino = paises_monedas[pais_dest]
+        break
+    print("País inválido. Intenta nuevamente.")
+
+telefono_dest = input("Teléfono: ")
+correo_dest = input("Correo: ")
+
+destinatario1 = ClienteDestino(
+    nombre_dest,
+    apellido_dest,
+    pais_dest,
+    telefono_dest,
+    correo_dest
+)
+
 # Monedas disponibles
 monedas = list(datos["rates"].keys())
 
-# Entrada país de destino
-while True:
-    try:
-        pais_destino = input(
-            "¿A qué país deseas enviar dinero?"
-            ).upper()
-        if pais_destino in paises_monedas:
-            moneda_destino = paises_monedas[pais_destino]
-            break
-        else:
-            print("País inválido, por favor asegurate de ingresar el nombre del país")
-    except ValueError:
-        print("Ingrese solo carácteres alfabeticos.")
-
-# Entrada país de destino
+# Opción moneda no disponible
 while True:
     if moneda_destino in monedas:
         break
     else:
         moneda_destino = input(
-            "Actualmente no manejamos esta moneda ¿Te gustaría enviar dolares o euros a "
-            + pais_destino + "? (USD o EUR): "
+            "Actualmente no manejamos esta moneda ¿Te gustaría enviar " +
+            "dolares o euros a " + pais_dest + "? (USD o EUR): "
             ).upper()
 
         if moneda_destino == "USD":
@@ -100,7 +109,7 @@ while True:
         elif moneda_destino == "EUR":
             break
         else:
-            print("No podemos enviar ", moneda_destino, "a ", pais_destino)
+            print("No podemos enviar ", moneda_destino, "a ", pais_dest)
 
 # Tasa del día
 tasa_cambio = datos["rates"][moneda_destino]
@@ -111,9 +120,9 @@ print("La tasa del día para", moneda_destino, "es de:",
 
 while True:
     try:
-        cantidad_destino = input("¿Cuánto deseas enviar?")
-        cantidad_destino = float(cantidad_destino.replace(",", "."))
-        if cantidad_destino < 20000:
+        cantidad_remitente = input("¿Cuánto deseas enviar?")
+        cantidad_remitente = float(cantidad_remitente.replace(",", "."))
+        if cantidad_remitente < 20000:
             print("El monto minimo es de 20000 COP.")
 
         else:
@@ -123,20 +132,35 @@ while True:
               " o decimales. Ej: 150.98 ó 150,98")
 
 # Cálculo subtotal en COP
-cantidad_remitente = round(cantidad_destino * tasa_cambio, 2)
-print(cantidad_destino, "COP equivalen a", cantidad_remitente,
+cantidad_destino = round(cantidad_remitente * tasa_cambio, 2)
+print(cantidad_remitente, "COP equivalen a", cantidad_destino,
       moneda_destino, " antes de comisión e impuestos")
 
 # Cuatro por mil
 gravamen_mf = round(cantidad_remitente * 0.004, 2)
+print("El 4x1000 es de:", gravamen_mf, "COP")
 
 # Comisión
 comision = round(cantidad_remitente * 0.05, 2)
+print("La comisión es de:", comision, "COP")
 
 # IVA
 impuesto = round(comision * 0.19, 2)
+print("El IVA sobre la comisión es de:", impuesto, "COP")
 
 # Total a pagar
 total_remitente = round((cantidad_remitente + gravamen_mf + comision +
-                        impuesto)/tasa_cambio, 2)
+                        impuesto), 2)
+
+# Entrega de resultados
 print("El total a pagar es de:", total_remitente, "COP")
+
+# Finalizar transacción
+remittance = input("¿Desea continuar con la transacción?")
+if remittance.lower().strip() in ["sí", "si", "s"]:
+    print("Usted será comunicado con un asesor para completar el envío de",
+          cantidad_destino, moneda_destino, "a", destinatario1.nombre,
+          destinatario1.apellido, "en", destinatario1.pais)
+else:
+    print("Transacción cancelada. Estaremos aquí para ayudarte cuando",
+          "lo necesites.")
