@@ -155,7 +155,7 @@ total_remitente = round((cantidad_remitente + gravamen_mf + comision +
 # Entrega de resultados
 print("El total a pagar es de:", total_remitente, "COP")
 
-# Enviar dinero
+# Finalizar transacción
 remittance = input("¿Desea continuar con la transacción?")
 if remittance.lower().strip() in ["sí", "si", "s"]:
     print("Usted será comunicado con un asesor para completar el envío de",
@@ -164,4 +164,3 @@ if remittance.lower().strip() in ["sí", "si", "s"]:
 else:
     print("Transacción cancelada. Estaremos aquí para ayudarte cuando",
           "lo necesites.")
-    
