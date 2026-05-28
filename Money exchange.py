@@ -5,34 +5,49 @@ from cliente_destino import ClienteDestino
 import requests
 import xml.etree.ElementTree as ET
 
+# Ingresar cliente remitente
+print("=== INGRESAR DATOS CLIENTE REMITENTE ===")
+
+nombre = input("Nombre: ")
+apellido = input("Apellido: ")
+pais = input("País: ")
+correo = input("Correo: ")
+documento = input("Documento: ")
+telefono = input("Teléfono: ")
+ciudad = input("Ciudad: ")
+ocupacion = input("Ocupación: ")
+ingreso = input("Tipo de ingreso: ")
+
 cliente1 = ClienteRemitente(
-    "Kevin",
-    "Rodriguez",
-    "Colombia",
-    "kevinrodriguez@gmail.com",
-    "123456789",
-    "3232376126",
-    "Bogotá",
-    "Estudiante",
-    "Salario"
+    nombre,
+    apellido,
+    pais,
+    correo,
+    documento,
+    telefono,
+    ciudad,
+    ocupacion,
+    ingreso
 )
 
-print("=== CLIENTE REMITENTE ===")
-print(cliente1.mostrar_info())
+# Ingresar cliente destino
+print("\n=== INGRESAR DATOS CLIENTE DESTINO ===")
+
+nombre_dest = input("Nombre: ")
+apellido_dest = input("Apellido: ")
+pais_dest = input("País: ")
+telefono_dest = input("Teléfono: ")
+correo_dest = input("Correo: ")
 
 destinatario1 = ClienteDestino(
-    "Jhon",
-    "Smith",
-    "Estados Unidos",
-    "800 555 0125",
-    "jolin.doe@email.com",
+    nombre_dest,
+    apellido_dest,
+    pais_dest,
+    telefono_dest,
+    correo_dest
 )
 
-print("=== CLIENTE DESTINO ===")
-print(destinatario1.mostrar_info())
-
 # Importar monedas ISO
-
 tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 
