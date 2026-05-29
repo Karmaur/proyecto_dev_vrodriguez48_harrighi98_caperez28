@@ -5,48 +5,48 @@ from cliente_destino import ClienteDestino
 import requests
 import xml.etree.ElementTree as ET
 
-# Importar monedas ISO
+# Item 1: Importar monedas ISO
 tree = ET.parse("ISO4217.xml")
 root = tree.getroot()
 
-# Importar tasas de cambio
+# Item 2: Importar tasas de cambio
 url = "https://api.exchangerate-api.com/v4/latest/COP"
 datos = requests.get(url).json()
 
-# País y monedas ISO
+# Item 3: País y monedas ISO
 paises_monedas = {}
 
-# Revisa los elementos de la ISO y almacena nombre, país y moneda
+# Item 4: Revisa los elementos de la ISO y almacena nombre, país y moneda
 for elem in root.findall(".//CcyNtry"):
     pais_iso = elem.find("CtryNm")
     moneda_iso = elem.find("Ccy")
     nombre_iso = elem.find("CcyNm")
 
-# Solo incluye registros que estén completos(control de datos)
+# Item 5: Solo incluye registros que estén completos(control de datos)
     if pais_iso is None or moneda_iso is None or nombre_iso is None:
         continue
 
     pais = pais_iso.text.split("(")[0].strip().upper()
     moneda = moneda_iso.text
 
-# Descarta monedas de uso especial
+# Item 6: Descarta monedas de uso especial
     if nombre_iso.get("IsFund") == "true":
         continue
 
-# Descarta monedas de uso especial
+# Item 7: Descarta monedas de uso especial
     if "Next day" in nombre_iso.text:
         continue
 
-# Solo la primera entrada para los países duplicados(control de datos)
+# Item 8: Solo la primera entrada para los países duplicados(control de datos)
     if pais not in paises_monedas:
         paises_monedas[pais] = moneda
 
-# Ingresar cliente remitente
+# Item9 :Ingresar cliente remitente
 print("=== INGRESAR DATOS CLIENTE REMITENTE ===")
 
 nombre = input("Nombre: ")
 apellido = input("Apellido: ")
-pais = input("País: ")
+pais = "Colombia"
 correo = input("Correo: ")
 documento = input("Documento: ")
 telefono = input("Teléfono: ")
@@ -66,13 +66,13 @@ cliente1 = ClienteRemitente(
     ingreso
 )
 
-# Ingresar cliente destino
+# Item 10: Ingresar cliente destino
 print("\n=== INGRESAR DATOS CLIENTE DESTINO ===")
 
 nombre_dest = input("Nombre: ")
 apellido_dest = input("Apellido: ")
 
-# Validación pais destino
+# Item 11: Validación pais destino
 while True:
     pais_dest = input("País: ").strip().upper()
     if pais_dest in paises_monedas:
@@ -91,10 +91,10 @@ destinatario1 = ClienteDestino(
     correo_dest
 )
 
-# Monedas disponibles
+# Item 12: Monedas disponibles
 monedas = list(datos["rates"].keys())
 
-# Opción moneda no disponible
+# Item 13: pción moneda no disponible
 while True:
     if moneda_destino in monedas:
         break
@@ -111,10 +111,10 @@ while True:
         else:
             print("No podemos enviar ", moneda_destino, "a ", pais_dest)
 
-# Tasa del día
+# Item 14: Tasa del día
 tasa_cambio = datos["rates"][moneda_destino]
 
-# Monto a enviar
+# Item 15: Monto a enviar
 print("La tasa del día para", moneda_destino, "es de:",
       round(1/tasa_cambio, 2), "COP por cada", moneda_destino)
 
@@ -123,7 +123,10 @@ while True:
         cantidad_remitente = input("¿Cuánto deseas enviar?")
         cantidad_remitente = float(cantidad_remitente.replace(",", "."))
         if cantidad_remitente < 20000:
-            print("El monto minimo es de 20000 COP.")
+            print("El monto minimo es de 20000 COP")
+
+        elif cantidad_remitente > 13000000:
+            print("El monto maximo es de 13000000 COP")
 
         else:
             break
@@ -131,20 +134,21 @@ while True:
         print("Entrada no válida. Por favor ingrese solo números enteros" +
               " o decimales. Ej: 150.98 ó 150,98")
 
-# Cálculo subtotal en COP
+# Item 16: Cálculo subtotal en COP
 cantidad_destino = round(cantidad_remitente * tasa_cambio, 2)
 print(cantidad_remitente, "COP equivalen a", cantidad_destino,
       moneda_destino, " antes de comisión e impuestos")
 
+#Item 17: Calculo de impuesto y comisiones:
 # Cuatro por mil
 gravamen_mf = round(cantidad_remitente * 0.004, 2)
 print("El 4x1000 es de:", gravamen_mf, "COP")
 
-# Comisión
+#Comisión
 comision = round(cantidad_remitente * 0.05, 2)
 print("La comisión es de:", comision, "COP")
 
-# IVA
+#IVA
 impuesto = round(comision * 0.19, 2)
 print("El IVA sobre la comisión es de:", impuesto, "COP")
 
@@ -152,7 +156,7 @@ print("El IVA sobre la comisión es de:", impuesto, "COP")
 total_remitente = round((cantidad_remitente + gravamen_mf + comision +
                         impuesto), 2)
 
-# Entrega de resultados
+# Item 18: Entrega de resultados
 print("El total a pagar es de:", total_remitente, "COP")
 
 # Finalizar transacción
