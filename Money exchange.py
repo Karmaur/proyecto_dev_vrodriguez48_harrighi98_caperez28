@@ -1,7 +1,7 @@
 # The objective of the following code is to determine the amount on COP
 # needed to exchange for a given amount in a different currency for remitance.
 
-#Item 0: Importacion de librerias y clases
+# Item 0: Importacion de librerias y clases
 from cliente_remitente import ClienteRemitente
 from cliente_destino import ClienteDestino
 import requests
@@ -141,16 +141,16 @@ cantidad_destino = round(cantidad_remitente * tasa_cambio, 2)
 print(cantidad_remitente, "COP equivalen a", cantidad_destino,
       moneda_destino, " antes de comisión e impuestos")
 
-#Item 17: Calculo de impuesto y comisiones:
+# Item 17: Calculo de impuesto y comisiones:
 # Cuatro por mil
 gravamen_mf = round(cantidad_remitente * 0.004, 2)
 print("El 4x1000 es de:", gravamen_mf, "COP")
 
-#Comisión
+# Comisión
 comision = round(cantidad_remitente * 0.05, 2)
 print("La comisión es de:", comision, "COP")
 
-#IVA
+# IVA
 impuesto = round(comision * 0.19, 2)
 print("El IVA sobre la comisión es de:", impuesto, "COP")
 
