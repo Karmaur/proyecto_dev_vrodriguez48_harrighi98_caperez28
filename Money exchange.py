@@ -1,5 +1,7 @@
 # The objective of the following code is to determine the amount on COP
 # needed to exchange for a given amount in a different currency for remitance.
+
+#Item 0: Importacion de librerias y clases
 from cliente_remitente import ClienteRemitente
 from cliente_destino import ClienteDestino
 import requests
